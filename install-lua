@@ -1,0 +1,87 @@
+#!/bin/zsh
+
+# === Configuration ===
+LUA_VERSION="5.1.5"
+LUAROCKS_VERSION="3.11.0"
+
+# === Helper function to check command existence ===
+function command_exists {
+    command -v "$1" >/dev/null 2>&1
+}
+
+function install_dependencies {
+    local packages=(build-essential libreadline-dev unzip curl)
+
+    echo "Checking for required system packages..."
+
+    local to_install=()
+    for pkg in $packages; do
+        if ! dpkg -s "$pkg" >/dev/null 2>&1; then
+            to_install+=("$pkg")
+        fi
+    done
+
+    if (( ${#to_install[@]} )); then
+        echo "Installing missing packages: $to_install"
+        sudo apt-get update
+        sudo apt-get install -y $to_install
+    else
+        echo "All required packages are already installed."
+    fi
+}
+
+# === Install Lua ===
+function install_lua {
+    if command_exists lua; then
+        INSTALLED_LUA_VERSION=$(lua -v 2>&1 | awk '{print $2}')
+        if [[ "$INSTALLED_LUA_VERSION" == "$LUA_VERSION" ]]; then
+            echo "Lua $LUA_VERSION is already installed."
+            return
+        else
+            echo "Different Lua version detected: $INSTALLED_LUA_VERSION. Installing $LUA_VERSION..."
+        fi
+    else
+        echo "Lua not found. Installing Lua $LUA_VERSION..."
+    fi
+
+    LUA_TAR="lua-${LUA_VERSION}.tar.gz"
+    curl -R -O "https://www.lua.org/ftp/${LUA_TAR}"
+    tar -xzf "$LUA_TAR"
+    cd "lua-${LUA_VERSION}" || exit
+    make linux test
+    sudo make install
+    cd ..
+    rm -rf "lua-${LUA_VERSION}" "$LUA_TAR"
+}
+
+# === Install LuaRocks ===
+function install_luarocks {
+    if command_exists luarocks; then
+        INSTALLED_LUAROCKS_VERSION=$(luarocks --version | head -n 1 | awk '{print $2}')
+        if [[ "$INSTALLED_LUAROCKS_VERSION" == "$LUAROCKS_VERSION" ]]; then
+            echo "LuaRocks $LUAROCKS_VERSION is already installed."
+            return
+        else
+            echo "Different LuaRocks version detected: $INSTALLED_LUAROCKS_VERSION. Installing $LUAROCKS_VERSION..."
+        fi
+    else
+        echo "LuaRocks not found. Installing LuaRocks $LUAROCKS_VERSION..."
+    fi
+
+    LR_TAR="luarocks-${LUAROCKS_VERSION}.tar.gz"
+    curl -R -O "https://luarocks.github.io/luarocks/releases/${LR_TAR}"
+    tar -xzf "$LR_TAR"
+    cd "luarocks-${LUAROCKS_VERSION}" || exit
+    ./configure --with-lua-include=/usr/local/include
+    make
+    sudo make install
+    cd ..
+    rm -rf "luarocks-${LUAROCKS_VERSION}" "$LR_TAR"
+}
+
+# === Main ===
+install_dependencies
+install_lua
+install_luarocks
+
+echo "Installation completed."

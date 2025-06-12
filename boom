@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+
+if [[ -z $STOW_FOLDERS ]]; then
+    STOW_FOLDERS="bin,nvim,tmux,zsh"
+fi
+
+if [[ -z $DOTFILES ]]; then
+    DOTFILES=$HOME/.dotfiles
+fi
+
+pushd "$DOTFILES" || exit
+
+echo "Initializing git submodules..."
+git submodule update --init --recursive
+
+for folder in ${(s:,:)STOW_FOLDERS}; do
+    if [[ ! -d $folder ]]; then
+        echo "Warning: $folder not found in $DOTFILES, skipping."
+        continue
+    fi
+
+    echo "stow $folder"
+    stow -D $folder
+    stow $folder
+done
+
+popd

@@ -1,0 +1,6 @@
+[submodule "nvim/nvim"]
+	path = nvim/nvim
+	url = https://github.com/tenmo2003/init.lua
+[submodule "nvim/.config/nvim"]
+	path = nvim/.config/nvim
+	url = https://github.com/tenmo2003/init.lua
