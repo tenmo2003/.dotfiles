@@ -1,5 +1,29 @@
 #!/usr/bin/env zsh
 
+install_stow() {
+    echo "Stow is not installed. Attempting to install..."
+
+    if command -v apt >/dev/null 2>&1; then
+        sudo apt update && sudo apt install -y stow
+    elif command -v brew >/dev/null 2>&1; then
+        brew install stow
+    elif command -v pacman >/dev/null 2>&1; then
+        sudo pacman -Sy --noconfirm stow
+    elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y stow
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum install -y stow
+    else
+        echo "No supported package manager found. Please install 'stow' manually."
+        return 1
+    fi
+}
+
+if ! command -v stow >/dev/null 2>&1; then
+    install_stow
+fi
+
+
 if [[ -z $STOW_FOLDERS ]]; then
     STOW_FOLDERS="bin,nvim,tmux,zsh"
 fi
@@ -20,8 +44,9 @@ for folder in ${(s:,:)STOW_FOLDERS}; do
     fi
 
     echo "stow $folder"
-    stow -D $folder
-    stow $folder
+    stow --adopt $folder
 done
+
+git restore .
 
 popd
