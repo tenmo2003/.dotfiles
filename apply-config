@@ -44,7 +44,7 @@ for folder in ${(s:,:)STOW_FOLDERS}; do
     fi
 
     echo "stow $folder"
-    stow --adopt $folder
+    stow -t $HOME --adopt $folder
 done
 
 git restore .
