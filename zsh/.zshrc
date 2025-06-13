@@ -125,6 +125,7 @@ rehash_precmd() {
 add-zsh-hook -Uz precmd rehash_precmd
 
 source ~/.zsh_profile
+source ~/powerlevel10k/powerlevel10k.zsh-theme
 
 # ls
 alias l='ls -lh'
