@@ -141,6 +141,12 @@ alias ga='git add'
 alias gc='git commit -m'
 alias gp='git push'
 alias gs='git status'
+alias gst='git stash'
+alias gcane='git commit --amend --no-edit'
+
+alias grsh='git reset --hard'
+alias grss='git reset --soft'
+alias grs='git reset'
 
 # cds
 alias cd2='cd ../..'
