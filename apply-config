@@ -37,6 +37,7 @@ git submodule update --init --recursive
 echo "Stowing..."
 pushd $SCRIPT_DIR/stows
 stow -v -t $HOME --adopt */
+popd
 
 git restore .
 
