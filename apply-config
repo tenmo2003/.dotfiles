@@ -23,10 +23,7 @@ if ! command -v stow >/dev/null 2>&1; then
     install_stow
 fi
 
-
-if [[ -z $STOW_FOLDERS ]]; then
-    STOW_FOLDERS="bin,nvim,tmux,zsh,fzf"
-fi
+SCRIPT_DIR="$(cd -- "$(dirname -- "${(%):-%N}")" && pwd)"
 
 if [[ -z $DOTFILES ]]; then
     DOTFILES=$HOME/.dotfiles
@@ -37,15 +34,9 @@ pushd "$DOTFILES" || exit
 echo "Initializing git submodules..."
 git submodule update --init --recursive
 
-for folder in ${(s:,:)STOW_FOLDERS}; do
-    if [[ ! -d $folder ]]; then
-        echo "Warning: $folder not found in $DOTFILES, skipping."
-        continue
-    fi
-
-    echo "stow $folder"
-    stow -t $HOME --adopt $folder
-done
+echo "Stowing..."
+pushd $SCRIPT_DIR/stows
+stow -v -t $HOME --adopt */
 
 git restore .
 
