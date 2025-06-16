@@ -1,3 +1,4 @@
 [submodule "stows/nvim/.config/nvim"]
 	path = stows/nvim/.config/nvim
 	url = https://github.com/tenmo2003/init.lua.git
+    branch = master

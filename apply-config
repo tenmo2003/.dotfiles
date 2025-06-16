@@ -34,6 +34,11 @@ pushd "$DOTFILES" || exit
 echo "Initializing git submodules..."
 git submodule update --init --recursive
 
+echo "Checkout nvim"
+pushd $SCRIPT_DIR/stows/nvim/.config/nvim
+git checkout master
+popd
+
 echo "Stowing..."
 pushd $SCRIPT_DIR/stows
 stow -v -t $HOME --adopt */
