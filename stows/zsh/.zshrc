@@ -158,6 +158,15 @@ alias cd4='cd ../../../../'
 alias vi='nvim'
 alias vim='nvim'
 
+nvimconfig() {
+  pushd "$DOTFILES/stows/nvim/.config/nvim" > /dev/null || return
+  nvim .
+  popd > /dev/null || return
+}
+
+alias zshconfig='nvim ~/.zshrc'
+
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
