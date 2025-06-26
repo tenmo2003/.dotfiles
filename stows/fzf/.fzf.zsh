@@ -1,7 +1,7 @@
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == */home/tenmo/.fzf/bin* ]]; then
-  PATH="${PATH:+${PATH}:}/home/tenmo/.fzf/bin"
+if [[ ! "$PATH" == *$HOME/.fzf/bin* ]]; then
+  PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
 
 source <(fzf --zsh)
