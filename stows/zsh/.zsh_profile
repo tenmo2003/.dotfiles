@@ -19,5 +19,6 @@ addToPathFront() {
 
 addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.local/bin
+addToPath /usr/local/go/bin
 
 bindkey -s ^f "tmux-sessionizer\n"
