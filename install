@@ -24,7 +24,37 @@ log() {
 
 log "RUN: env: $env -- grep: $grep"
 
-runs_dir=`find $SCRIPT_DIR/runs -mindepth 1 -maxdepth 1 -executable`
+runs_dir=`find $SCRIPT_DIR/runs -mindepth 1 -maxdepth 1`
+
+run_script() {
+    script_dir=$1
+
+    main_script=$script_dir/main_script
+    if [[ -d $script_dir/dependencies ]]; then
+        deps=`find $script_dir/dependencies -mindepth 1 -maxdepth 1 -executable`
+        for d in $deps; do
+            log "Installing dependency $(basename $d) for $(basename $script_dir)"
+            if [[ $dry_run == false ]]; then
+                $d
+            fi
+        done
+    fi
+
+    log "Running $(basename $script_dir)"
+    if [[ $dry_run == false ]]; then
+        $main_script
+    fi
+
+    if [[ -d $script_dir/addons ]]; then
+        addons=`find $script_dir/addons -mindepth 1 -maxdepth 1 -executable`
+        for d in $addons; do
+            log "Installing addon $(basename $d) for $(basename $script_dir)"
+            if [[ $dry_run == false ]]; then
+                $d
+            fi
+        done
+    fi
+}
 
 for s in $runs_dir; do
     if basename $s | grep -vq "$grep"; then
@@ -34,7 +64,5 @@ for s in $runs_dir; do
 
     log "running script: $s"
 
-    if [[ $dry_run == false ]]; then
-        $s
-    fi
+    run_script $s
 done
