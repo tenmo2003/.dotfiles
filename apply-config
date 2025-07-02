@@ -32,7 +32,7 @@ fi
 pushd "$DOTFILES" || exit
 
 echo "Initializing git submodules..."
-git submodule update --init --recursive
+git submodule update --init --recursive --remote --merge
 
 echo "Checkout nvim"
 pushd $SCRIPT_DIR/stows/nvim/.config/nvim
