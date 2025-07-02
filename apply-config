@@ -39,6 +39,10 @@ pushd $SCRIPT_DIR/stows/nvim/.config/nvim
 git checkout master
 popd
 
+# to avoid creating symlink directly to these directories as we only need the children
+mkdir -p $HOME/.config
+mkdir -p $HOME/.local
+
 echo "Stowing..."
 pushd $SCRIPT_DIR/stows
 stow -v -t $HOME --adopt */
