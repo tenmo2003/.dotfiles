@@ -29,6 +29,8 @@ runs_dir=`find $SCRIPT_DIR/runs -mindepth 1 -maxdepth 1`
 run_script() {
     script_dir=$1
 
+    script_cmd=$(basename $script_dir)
+
     main_script=$script_dir/main_script
     if [[ -d $script_dir/dependencies ]]; then
         deps=`find $script_dir/dependencies -mindepth 1 -maxdepth 1 -executable`
@@ -40,15 +42,21 @@ run_script() {
         done
     fi
 
-    log "Running $(basename $script_dir)"
-    if [[ $dry_run == false ]]; then
-        $main_script
+    if command -v $script_cmd >/dev/null 2>&1; then
+        log "$script_cmd is already installed"
+    else
+        log "Running $script_cmd"
+        if [[ $dry_run == false ]]; then
+            $main_script
+        fi
     fi
+
+
 
     if [[ -d $script_dir/addons ]]; then
         addons=`find $script_dir/addons -mindepth 1 -maxdepth 1 -executable`
         for d in $addons; do
-            log "Installing addon $(basename $d) for $(basename $script_dir)"
+            log "Installing addon $(basename $d) for $script_cmd"
             if [[ $dry_run == false ]]; then
                 $d
             fi
