@@ -164,10 +164,12 @@ nvimconfig() {
   popd > /dev/null || return
 }
 
-alias zshconfig='nvim ~/.zshrc'
+alias zshconfig="nvim $DOTFILES/stows/zsh/.zshrc"
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export JAVA_HOME="/opt/jdk-21.0.6"
+export PATH="$PATH:$JAVA_HOME/bin"
