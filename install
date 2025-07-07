@@ -37,7 +37,7 @@ run_script() {
         for d in $deps; do
             log "Installing dependency $(basename $d) for $(basename $script_dir)"
             if [[ $dry_run == false ]]; then
-                $d
+                source "$d"
             fi
         done
     fi
@@ -45,9 +45,9 @@ run_script() {
     if command -v $script_cmd >/dev/null 2>&1; then
         log "$script_cmd is already installed"
     else
-        log "Running $script_cmd"
+        log "Installing $script_cmd"
         if [[ $dry_run == false ]]; then
-            $main_script
+            source "$main_script"
         fi
     fi
 
@@ -58,7 +58,7 @@ run_script() {
         for d in $addons; do
             log "Installing addon $(basename $d) for $script_cmd"
             if [[ $dry_run == false ]]; then
-                $d
+                source "$d"
             fi
         done
     fi
