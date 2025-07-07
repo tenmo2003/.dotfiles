@@ -22,3 +22,4 @@ addToPathFront $HOME/.local/bin
 addToPath /usr/local/go/bin
 
 bindkey -s ^f "tmux-sessionizer\n"
+bindkey -s ^h "tmux-cht.sh\n"

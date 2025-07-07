@@ -7,8 +7,14 @@ fi
 read -p "Enter Query: " query
 
 if grep -qs "$selected" ~/.tmux-cht-languages; then
-    query=`echo $query | tr ' ' '+'`
-    tmux neww bash -c "echo \"curl cht.sh/$selected/$query/\" & curl cht.sh/$selected/$query & while [ : ]; do sleep 1; done"
+    query=$(echo "$query" | tr ' ' '+')
+    cmd="curl -s cht.sh/$selected/$query | less"
 else
-    tmux neww bash -c "curl -s cht.sh/$selected~$query | less"
+    cmd="curl -s cht.sh/$selected~$query | less"
+fi
+
+if [ -n "$TMUX" ]; then
+    tmux neww bash -c "$cmd"
+else
+    bash -c "$cmd"
 fi
