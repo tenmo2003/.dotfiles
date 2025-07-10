@@ -1,14 +1,89 @@
+#!/bin/bash
+
 echo "Install JDK 21? (y/n)"
 read CONFIRM
 
-if [ "$CONFIRM" = "n" ]; then
-    exit 0
+if [ "$CONFIRM" != "n" ]; then
+    curl -LO https://download.oracle.com/java/21/archive/jdk-21.0.6_linux-x64_bin.tar.gz
+    sudo tar -xzf jdk-21.0.6_linux-x64_bin.tar.gz -C /opt
+
+    EXTRACTED_DIR=$(tar -tzf jdk-21.0.6_linux-x64_bin.tar.gz | head -1 | cut -f1 -d"/")
+    sudo mv "/opt/$EXTRACTED_DIR" /opt/jdk-21.0.6
+
+    rm jdk-21.0.6_linux-x64_bin.tar.gz
+
+    echo "Do you want to set JAVA_HOME and update PATH for JDK 21? (y/n)"
+    read SET_ENV
+
+    if [ "$SET_ENV" != "n" ]; then
+        export JAVA_HOME=/opt/jdk-21.0.6
+        export PATH=$JAVA_HOME/bin:$PATH
+        echo "JAVA_HOME and PATH set for JDK 21"
+    fi
 fi
 
-curl -LO https://download.oracle.com/java/21/archive/jdk-21.0.6_linux-x64_bin.tar.gz
-sudo tar -xzf jdk-21.0.6_linux-x64_bin.tar.gz -C /opt
+echo "Install JDK 17? (y/n)"
+read CONFIRM
 
-export JAVA_HOME=/opt/jdk-21.0.6
-export PATH=$PATH:$JAVA_HOME/bin
+if [ "$CONFIRM" != "n" ]; then
+    curl -LO https://builds.openlogic.com/downloadJDK/openlogic-openjdk/17.0.14+7/openlogic-openjdk-17.0.14+7-linux-x64.tar.gz
+    sudo tar -xzf openlogic-openjdk-17.0.14+7-linux-x64.tar.gz -C /opt
 
-rm jdk-21.0.6_linux-x64_bin.tar.gz
+    EXTRACTED_DIR=$(tar -tzf openlogic-openjdk-17.0.14+7-linux-x64.tar.gz | head -1 | cut -f1 -d"/")
+    sudo mv "/opt/$EXTRACTED_DIR" /opt/jdk-17
+
+    rm openlogic-openjdk-17.0.14+7-linux-x64.tar.gz
+
+    echo "Do you want to set JAVA_HOME and update PATH for JDK 17? (y/n)"
+    read SET_ENV
+
+    if [ "$SET_ENV" != "n" ]; then
+        export JAVA_HOME=/opt/jdk-17
+        export PATH=$JAVA_HOME/bin:$PATH
+        echo "JAVA_HOME and PATH set for JDK 17"
+    fi
+fi
+
+echo "Install JDK 8? (y/n)"
+read CONFIRM
+
+if [ "$CONFIRM" != "n" ]; then
+    curl -LO https://builds.openlogic.com/downloadJDK/openlogic-openjdk/8u452-b09/openlogic-openjdk-8u452-b09-linux-x64.tar.gz
+    sudo tar -xzf openlogic-openjdk-8u452-b09-linux-x64.tar.gz -C /opt
+
+    EXTRACTED_DIR=$(tar -tzf openlogic-openjdk-8u452-b09-linux-x64.tar.gz | head -1 | cut -f1 -d"/")
+    sudo mv "/opt/$EXTRACTED_DIR" /opt/jdk-8
+
+    rm openlogic-openjdk-8u452-b09-linux-x64.tar.gz
+
+    echo "Do you want to set JAVA_HOME and update PATH for JDK 8? (y/n)"
+    read SET_ENV
+
+    if [ "$SET_ENV" != "n" ]; then
+        export JAVA_HOME=/opt/jdk-8
+        export PATH=$JAVA_HOME/bin:$PATH
+        echo "JAVA_HOME and PATH set for JDK 8"
+    fi
+fi
+
+echo "Install JDK 11? (y/n)"
+read CONFIRM
+
+if [ "$CONFIRM" != "n" ]; then
+    curl -LO https://builds.openlogic.com/downloadJDK/openlogic-openjdk/11.0.27+6/openlogic-openjdk-11.0.27+6-linux-x64.tar.gz
+    sudo tar -xzf openlogic-openjdk-11.0.27+6-linux-x64.tar.gz -C /opt
+
+    EXTRACTED_DIR=$(tar -tzf openlogic-openjdk-11.0.27+6-linux-x64.tar.gz | head -1 | cut -f1 -d"/")
+    sudo mv "/opt/$EXTRACTED_DIR" /opt/jdk-11
+
+    rm openlogic-openjdk-11.0.27+6-linux-x64.tar.gz
+
+    echo "Do you want to set JAVA_HOME and update PATH for JDK 11? (y/n)"
+    read SET_ENV
+
+    if [ "$SET_ENV" != "n" ]; then
+        export JAVA_HOME=/opt/jdk-11
+        export PATH=$JAVA_HOME/bin:$PATH
+        echo "JAVA_HOME and PATH set for JDK 11"
+    fi
+fi
