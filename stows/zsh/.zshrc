@@ -173,3 +173,7 @@ alias dotfilesconfig="nvim $DOTFILES"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 export JAVA_HOME="/opt/jdk-21.0.6"
 export PATH="$PATH:$JAVA_HOME/bin"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
