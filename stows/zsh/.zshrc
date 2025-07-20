@@ -164,8 +164,17 @@ nvimconfig() {
   popd > /dev/null || return
 }
 
-alias zshconfig="nvim $DOTFILES/stows/zsh/.zshrc"
-alias dotfilesconfig="nvim $DOTFILES"
+zshconfig() {
+    pushd "$DOTFILES"
+    nvim stows/zsh/.zshrc
+    popd
+}
+
+dotfilesconfig() {
+    pushd "$DOTFILES"
+    nvim .
+    popd
+}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
