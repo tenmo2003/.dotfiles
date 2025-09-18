@@ -20,6 +20,9 @@ addToPathFront() {
 addToPathFront $HOME/.local/scripts
 addToPathFront $HOME/.local/bin
 addToPath /usr/local/go/bin
+addToPath "/opt/nvim-linux-x86_64/bin"
+export JAVA_HOME="/opt/jdk-21.0.6"
+addToPath "$JAVA_HOME/bin"
 
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^h "tmux-cht.sh\n"

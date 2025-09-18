@@ -125,67 +125,16 @@ rehash_precmd() {
 
 add-zsh-hook -Uz precmd rehash_precmd
 
-source ~/.zsh_profile
+source ~/.zsh_paths
+source ~/.zsh_aliases
+
 # source ~/powerlevel10k/powerlevel10k.zsh-theme
-source ~/robbyrussell-customized.zsh-theme
-
-# ls
-alias l='ls -lh'
-alias ll='ls -lah'
-alias la='ls -A'
-alias lm='ls -m'
-alias lr='ls -R'
-alias lg='ls -l --group-directories-first'
-
-# git
-alias gcl='git clone --depth 1'
-alias gi='git init'
-alias ga='git add'
-alias gc='git commit -m'
-alias gp='git push'
-alias gs='git status'
-alias gst='git stash'
-alias gcane='git commit --amend --no-edit'
-
-alias grsh='git reset --hard'
-alias grss='git reset --soft'
-alias grs='git reset'
-
-# cds
-alias cd2='cd ../..'
-alias cd3='cd ../../..'
-alias cd4='cd ../../../../'
-
-# custom
-alias vi='nvim'
-alias vim='nvim'
-
-nvimconfig() {
-  pushd "$DOTFILES/stows/nvim/.config/nvim" > /dev/null || return
-  nvim .
-  popd > /dev/null || return
-}
-
-zshconfig() {
-    pushd "$DOTFILES"
-    nvim stows/zsh/.zshrc
-    popd
-}
-
-dotfilesconfig() {
-    pushd "$DOTFILES"
-    nvim .
-    popd
-}
-
-setopt CORRECT # Cause why not
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+source ~/robbyrussell-customized.zsh-theme
 
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-export JAVA_HOME="/opt/jdk-21.0.6"
-export PATH="$PATH:$JAVA_HOME/bin"
+
+setopt CORRECT # Cause why not
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
