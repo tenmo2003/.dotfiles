@@ -46,3 +46,7 @@ dotfilesconfig() {
     nvim .
     popd
 }
+
+gotolazy() {
+    pushd ~/.local/share/nvim/lazy
+}
