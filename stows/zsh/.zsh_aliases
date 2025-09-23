@@ -14,6 +14,7 @@ alias gc='git commit -m'
 alias gp='git push'
 alias gs='git status'
 alias gst='git stash'
+alias gca='git commit --amend'
 alias gcane='git commit --amend --no-edit'
 
 alias grsh='git reset --hard'
