@@ -51,3 +51,21 @@ dotfilesconfig() {
 gotolazy() {
     pushd ~/.local/share/nvim/lazy
 }
+
+newprj() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: newprj <project-name> [project-type(personal/work]"
+        return
+    fi
+
+    project_type="personal"
+    if [[ -n "$2" ]]; then
+        project_type="$2"
+    fi
+
+    mkdir -p ~/projects/"$project_type"/"$1"
+
+    if [[ "$1" =~ ^https?:// ]]; then
+        git clone "$1" ~/projects/"$project_type"/"$1"
+    fi
+}
