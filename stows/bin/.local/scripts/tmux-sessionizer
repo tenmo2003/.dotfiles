@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-CONFIG_FILE_NAME="tmux-sessionizer.conf"
 CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/tmux-sessionizer"
+
+CONFIG_FILE_NAME="tmux-sessionizer.conf"
 CONFIG_FILE="$CONFIG_DIR/$CONFIG_FILE_NAME"
-PANE_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-sessionizer"
-PANE_CACHE_FILE="$PANE_CACHE_DIR/panes.cache"
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-sessionizer"
+PANE_CACHE_FILE="$CACHE_DIR/panes.cache"
+
+ADDITIONAL_PROJECTS="$CACHE_DIR/additional-projects"
 
 # config file example
 # ------------------------
@@ -65,49 +69,49 @@ VERSION="0.1.0"
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
-    -h | --help)
-        echo "Usage: tmux-sessionizer [OPTIONS] [SEARCH_PATH]"
-        echo "Options:"
-        echo "  -h, --help             Display this help message"
-        echo "  -s, --session <name>   session command index."
-        echo "  --vsplit               Create vertical split (horizontal layout) for session command"
-        echo "  --hsplit               Create horizontal split (vertical layout) for session command"
-        exit 0
-        ;;
-    -s | --session)
-        session_idx="$2"
-        if [[ -z $session_idx ]]; then
-            echo "Session index cannot be empty"
-            exit 1
-        fi
+        -h | --help)
+            echo "Usage: tmux-sessionizer [OPTIONS] [SEARCH_PATH]"
+            echo "Options:"
+            echo "  -h, --help             Display this help message"
+            echo "  -s, --session <name>   session command index."
+            echo "  --vsplit               Create vertical split (horizontal layout) for session command"
+            echo "  --hsplit               Create horizontal split (vertical layout) for session command"
+            exit 0
+            ;;
+        -s | --session)
+            session_idx="$2"
+            if [[ -z $session_idx ]]; then
+                echo "Session index cannot be empty"
+                exit 1
+            fi
 
-        if [[ -z $TS_SESSION_COMMANDS ]]; then
-            echo "TS_SESSION_COMMANDS is not set.  Must have a command set to run when switching to a session"
-            exit 1
-        fi
+            if [[ -z $TS_SESSION_COMMANDS ]]; then
+                echo "TS_SESSION_COMMANDS is not set.  Must have a command set to run when switching to a session"
+                exit 1
+            fi
 
-        if [[ -z "$session_idx" || "$session_idx" -lt 0 || "$session_idx" -ge "${#TS_SESSION_COMMANDS[@]}" ]]; then
-            echo "Error: Invalid index. Please provide an index between 0 and $((${#TS_SESSION_COMMANDS[@]} - 1))."
-            exit 1
-        fi
+            if [[ -z "$session_idx" || "$session_idx" -lt 0 || "$session_idx" -ge "${#TS_SESSION_COMMANDS[@]}" ]]; then
+                echo "Error: Invalid index. Please provide an index between 0 and $((${#TS_SESSION_COMMANDS[@]} - 1))."
+                    exit 1
+            fi
 
-        session_cmd="${TS_SESSION_COMMANDS[$session_idx]}"
+            session_cmd="${TS_SESSION_COMMANDS[$session_idx]}"
 
-        shift
-        ;;
-    --vsplit)
-        split_type="vsplit"
-        ;;
-    --hsplit)
-        split_type="hsplit"
-        ;;
-    -v | --version)
-        echo "tmux-sessionizer version $VERSION"
-        exit 0
-        ;;
-    *)
-        user_selected="$1"
-        ;;
+            shift
+            ;;
+        --vsplit)
+            split_type="vsplit"
+            ;;
+        --hsplit)
+            split_type="hsplit"
+            ;;
+        -v | --version)
+            echo "tmux-sessionizer version $VERSION"
+            exit 0
+            ;;
+        *)
+            user_selected="$1"
+            ;;
     esac
     shift
 done
@@ -169,7 +173,7 @@ is_tmux_running() {
 }
 
 init_pane_cache() {
-    mkdir -p "$PANE_CACHE_DIR"
+    mkdir -p "$CACHE_DIR"
     touch "$PANE_CACHE_FILE"
 }
 
@@ -250,7 +254,7 @@ find_dirs() {
             maxdepth="${TS_MAX_DEPTH:-1}"
         fi
 
-[[ -d "$path" ]] && find "$path" -mindepth "$mindepth" -maxdepth "$maxdepth" -path '*/.git' -prune -o -type d -print
+        [[ -d "$path" ]] && find "$path" -mindepth "$mindepth" -maxdepth "$maxdepth" -path '*/.git' -prune -o -type d -print
 
     done
 }
@@ -327,7 +331,12 @@ if [[ ! -z $session_cmd ]]; then
 elif [[ ! -z $user_selected ]]; then
     selected="$user_selected"
 else
-    selected=$(find_dirs | fzf)
+    selected=$(
+        {
+            [[ -f "$ADDITIONAL_PROJECTS" ]] && cat "$ADDITIONAL_PROJECTS"
+            find_dirs
+        } | fzf
+    )
 fi
 
 if [[ -z $selected ]]; then

@@ -31,9 +31,9 @@ alias vi='nvim'
 alias vim='nvim'
 
 nvimconfig() {
-  pushd "$DOTFILES/stows/nvim/.config/nvim" > /dev/null || return
-  nvim .
-  popd > /dev/null || return
+    pushd "$DOTFILES/stows/nvim/.config/nvim" > /dev/null || return
+    nvim .
+    popd > /dev/null || return
 }
 
 zshconfig() {
@@ -67,5 +67,22 @@ newprj() {
 
     if [[ "$1" =~ ^https?:// ]]; then
         git clone "$1" ~/projects/"$project_type"/"$1"
+    fi
+}
+
+markprj() {
+    project_dir="$(pwd)"
+    if [[ -n "$1" ]]; then
+        project_dir="$(readlink -f "$1")"
+    fi
+
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/tmux-sessionizer/"
+    ADDITIONAL_PROJECTS="${XDG_CACHE_HOME:-$HOME/.cache}/tmux-sessionizer/additional-projects"
+
+    if ! grep -qxF "$project_dir" "$ADDITIONAL_PROJECTS" 2>/dev/null; then
+        echo "$project_dir" >> "$ADDITIONAL_PROJECTS"
+        echo "Added $project_dir to additional projects"
+    else
+        echo "$project_dir is already in additional projects"
     fi
 }
