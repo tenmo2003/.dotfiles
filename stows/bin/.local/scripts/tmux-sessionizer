@@ -333,8 +333,8 @@ elif [[ ! -z $user_selected ]]; then
 else
     selected=$(
         {
-            [[ -f "$ADDITIONAL_PROJECTS" ]] && cat "$ADDITIONAL_PROJECTS"
             find_dirs
+            [[ -f "$ADDITIONAL_PROJECTS" ]] && cat "$ADDITIONAL_PROJECTS"
         } | fzf
     )
 fi
