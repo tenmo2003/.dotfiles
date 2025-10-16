@@ -23,6 +23,16 @@ if ! command -v stow >/dev/null 2>&1; then
     install_stow
 fi
 
+echo "Backup nvim config?(y/n)"
+read -q yn
+if [[ $yn == "y" ]]; then
+    echo "Backing up nvim config..."
+    pushd $HOME/.config/
+    mv nvim nvim.bak
+    popd
+    echo "Backed up nvim config to $HOME/.config/nvim.bak"
+fi
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${(%):-%N}")" && pwd)"
 
 if [[ -z $DOTFILES ]]; then
