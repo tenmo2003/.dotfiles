@@ -70,6 +70,13 @@ for s in $runs_dir; do
         continue
     fi
 
+    log "run script $s?(y/n)"
+    read -p "(y/n) " yn
+    case $yn in
+        [Yy]* ) ;;
+        * ) continue ;;
+    esac
+
     log "running script: $s"
 
     run_script $s
