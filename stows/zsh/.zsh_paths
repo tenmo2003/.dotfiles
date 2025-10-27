@@ -24,5 +24,8 @@ addToPath "/opt/nvim-linux-x86_64/bin"
 export JAVA_HOME="/opt/jdk-21.0.6"
 addToPath "$JAVA_HOME/bin"
 
+export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
+
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^h "tmux-cht.sh\n"
+bindkey -s "\eg" "open-git-remote.sh\n"
