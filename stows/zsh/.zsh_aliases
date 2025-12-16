@@ -88,3 +88,7 @@ markprj() {
         echo "$project_dir is already in additional projects"
     fi
 }
+
+bindkey -s ^f "tmux-sessionizer\n"
+bindkey -s ^h "tmux-cht.sh\n"
+bindkey -s "\eg" "open-git-remote.sh\n"
