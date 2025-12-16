@@ -91,4 +91,4 @@ markprj() {
 
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^h "tmux-cht.sh\n"
-bindkey -s "\eg" "open-git-remote.sh\n"
+bindkey -s ^g "open-git-remote.sh\n"
