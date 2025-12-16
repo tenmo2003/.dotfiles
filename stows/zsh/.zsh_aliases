@@ -54,7 +54,7 @@ gotolazy() {
 
 newprj() {
     if [[ -z "$1" ]]; then
-        echo "Usage: newprj <project-name> [project-type(personal/work)]"
+        echo "Usage: newprj <project-name/project-git-url> [project-type(personal/work)]"
         return
     fi
 
