@@ -133,6 +133,9 @@ source ~/.zsh_aliases
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 source ~/robbyrussell-customized.zsh-theme
 
+export EDITOR="nvim"
+export VISUAL="nvim"
+
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
