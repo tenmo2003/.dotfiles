@@ -23,5 +23,6 @@ addToPath /usr/local/go/bin
 addToPath "/opt/nvim-linux-x86_64/bin"
 export JAVA_HOME="/opt/jdk-21.0.6"
 addToPath "$JAVA_HOME/bin"
+addToPath "$(go env GOPATH)/bin"
 
 export BROWSER="/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe"
