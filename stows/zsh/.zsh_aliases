@@ -92,3 +92,5 @@ markprj() {
 bindkey -s ^f "tmux-sessionizer\n"
 bindkey -s ^h "tmux-cht.sh\n"
 bindkey -s ^g "open-git-remote.sh\n"
+
+alias initck='init-ck.sh'
