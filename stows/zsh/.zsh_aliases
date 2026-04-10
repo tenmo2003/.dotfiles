@@ -94,3 +94,6 @@ bindkey -s ^h "tmux-cht.sh\n"
 bindkey -s ^g "open-git-remote.sh\n"
 
 alias initck='init-ck.sh'
+alias tomaster='tomaster.sh'
+alias toservertest='toservertest.sh'
+alias todevelop='todevelop.sh'
