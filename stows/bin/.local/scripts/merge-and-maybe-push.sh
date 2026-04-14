@@ -11,8 +11,7 @@ fi
 git checkout $target_branch
 git merge $current_branch
 
-answer="n"
-read -p "Do you want to push to origin $target_branch? (y/n) (default: n) " answer
+read -e -p "Do you want to push to origin $target_branch? (y/n) " -i "y" answer
 
 if [[ $answer == "y" ]]; then
     git push origin $target_branch
