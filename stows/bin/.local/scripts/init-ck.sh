@@ -7,7 +7,7 @@ cp -r ~/claudekit-engineer/docs/ $pwd/
 cp -r ~/claudekit-engineer/plans $pwd/
 cp ~/claudekit-engineer/CLAUDE.md $pwd/
 
-if [[ -f $pwd/.gitignore && -z $(grep -q '.claude' $pwd/.gitignore) ]]; then
+if [[ -f "$PWD/.gitignore" ]] && ! grep -q '.claude' "$PWD/.gitignore"; then
     cat <<EOF >> $pwd/.gitignore
 # ClaudeKit
 .claude/
