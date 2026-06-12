@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-read -p "Install Golang 1.24.4? (y/n) " ACCEPT
+read -p "Install Golang 1.26.4? (y/n) " ACCEPT
 ACCEPT=${ACCEPT:-y}
 
 if [[ "$ACCEPT" =~ ^[Yy]$ ]]; then
@@ -11,8 +11,8 @@ if [[ "$ACCEPT" =~ ^[Yy]$ ]]; then
         *) echo "Unsupported architecture for Go: $(uname -m). Skipping."; return 0 2>/dev/null || exit 0 ;;
     esac
 
-    GO_TAR="go1.24.4.linux-${GO_ARCH}.tar.gz"
-    echo "Installing Golang 1.24.4 (${GO_ARCH})..."
+    GO_TAR="go1.26.4.linux-${GO_ARCH}.tar.gz"
+    echo "Installing Golang 1.26.4 (${GO_ARCH})..."
     # -f: fail on HTTP errors so we never wipe an existing install over a bad download
     if ! curl -fLO "https://go.dev/dl/${GO_TAR}"; then
         echo "Download failed: ${GO_TAR}. Keeping existing Go install."
