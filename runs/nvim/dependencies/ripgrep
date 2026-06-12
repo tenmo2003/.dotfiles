@@ -1,1 +1,4 @@
-sudo apt install -y ripgrep
+#!/usr/bin/env bash
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../lib/package-manager.sh"
+
+pkg_install ripgrep

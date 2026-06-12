@@ -4,10 +4,30 @@ read -p "Install Golang 1.24.4? (y/n) " ACCEPT
 ACCEPT=${ACCEPT:-y}
 
 if [[ "$ACCEPT" =~ ^[Yy]$ ]]; then
-    echo "Installing Golang 1.24.4..."
-    curl -LO https://go.dev/dl/go1.24.4.linux-amd64.tar.gz
-    sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.24.4.linux-amd64.tar.gz
-    rm go1.24.4.linux-amd64.tar.gz
+    # map machine architecture to Go release naming
+    case "$(uname -m)" in
+        x86_64)        GO_ARCH=amd64 ;;
+        aarch64|arm64) GO_ARCH=arm64 ;;
+        *) echo "Unsupported architecture for Go: $(uname -m). Skipping."; return 0 2>/dev/null || exit 0 ;;
+    esac
+
+    GO_TAR="go1.24.4.linux-${GO_ARCH}.tar.gz"
+    echo "Installing Golang 1.24.4 (${GO_ARCH})..."
+    # -f: fail on HTTP errors so we never wipe an existing install over a bad download
+    if ! curl -fLO "https://go.dev/dl/${GO_TAR}"; then
+        echo "Download failed: ${GO_TAR}. Keeping existing Go install."
+        return 1 2>/dev/null || exit 1
+    fi
+    # extract to a temp dir first so a failed extraction can't corrupt the existing install
+    GO_TMP=$(mktemp -d)
+    if ! tar -C "$GO_TMP" -xzf "$GO_TAR"; then
+        echo "Extraction failed: ${GO_TAR}. Keeping existing Go install."
+        rm -rf "$GO_TMP" "$GO_TAR"
+        return 1 2>/dev/null || exit 1
+    fi
+    sudo rm -rf /usr/local/go
+    sudo mv "$GO_TMP/go" /usr/local/go
+    rm -rf "$GO_TMP" "$GO_TAR"
 else
     echo "Golang installation skipped."
 fi

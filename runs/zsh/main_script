@@ -1,3 +1,15 @@
-sudo apt install zsh
+#!/usr/bin/env bash
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../lib/package-manager.sh"
+
+pkg_install zsh
 hash -r
-sudo chsh -s $(which zsh)
+
+# change default shell portably; chsh requires the shell listed in /etc/shells
+zsh_path=$(command -v zsh) || {
+    echo "zsh not installed; skipping default shell change."
+    return 0 2>/dev/null || exit 0
+}
+if ! grep -Fqx "$zsh_path" /etc/shells 2>/dev/null; then
+    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+fi
+sudo chsh -s "$zsh_path" "$USER"

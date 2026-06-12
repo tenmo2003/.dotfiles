@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# JDK download URLs below are x86_64-only builds
+if [ "$(uname -m)" != "x86_64" ]; then
+    echo "This script only provides x86_64 JDK builds; detected $(uname -m). Skipping."
+    return 0 2>/dev/null || exit 0
+fi
+
 echo "Install JDK 21? (y/n)"
 read CONFIRM
 

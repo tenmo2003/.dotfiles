@@ -8,11 +8,15 @@ install_stow() {
     elif command -v brew >/dev/null 2>&1; then
         brew install stow
     elif command -v pacman >/dev/null 2>&1; then
-        sudo pacman -Sy --noconfirm stow
+        sudo pacman -S --needed --noconfirm stow
     elif command -v dnf >/dev/null 2>&1; then
         sudo dnf install -y stow
     elif command -v yum >/dev/null 2>&1; then
         sudo yum install -y stow
+    elif command -v zypper >/dev/null 2>&1; then
+        sudo zypper --non-interactive install stow
+    elif command -v apk >/dev/null 2>&1; then
+        sudo apk add stow
     else
         echo "No supported package manager found. Please install 'stow' manually."
         return 1

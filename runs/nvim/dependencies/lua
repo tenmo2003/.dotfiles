@@ -10,24 +10,11 @@ function command_exists {
 }
 
 function install_dependencies {
-    local packages=(build-essential libreadline-dev unzip curl)
+    # package names in Debian form; helper translates per distro
+    source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../../../lib/package-manager.sh"
 
-    echo "Checking for required system packages..."
-
-    local to_install=()
-    for pkg in $packages; do
-        if ! dpkg -s "$pkg" >/dev/null 2>&1; then
-            to_install+=("$pkg")
-        fi
-    done
-
-    if (( ${#to_install[@]} )); then
-        echo "Installing missing packages: $to_install"
-        sudo apt-get update
-        sudo apt-get install -y $to_install
-    else
-        echo "All required packages are already installed."
-    fi
+    echo "Installing required system packages..."
+    pkg_install build-essential libreadline-dev unzip curl || return 1
 }
 
 # === Install Lua ===
@@ -45,12 +32,13 @@ function install_lua {
     fi
 
     LUA_TAR="lua-${LUA_VERSION}.tar.gz"
-    curl -R -O "https://www.lua.org/ftp/${LUA_TAR}"
-    tar -xzf "$LUA_TAR"
-    cd "lua-${LUA_VERSION}" || exit
-    make linux test
-    sudo make install
-    cd ..
+    curl -fR -O "https://www.lua.org/ftp/${LUA_TAR}" || return 1
+    tar -xzf "$LUA_TAR" || { rm -f "$LUA_TAR"; return 1; }
+    # build in a subshell: a failure can't leak a cwd change into the sourcing installer shell
+    if ! (cd "lua-${LUA_VERSION}" && make linux test && sudo make install); then
+        rm -rf "lua-${LUA_VERSION}" "$LUA_TAR"
+        return 1
+    fi
     rm -rf "lua-${LUA_VERSION}" "$LUA_TAR"
 }
 
@@ -69,19 +57,28 @@ function install_luarocks {
     fi
 
     LR_TAR="luarocks-${LUAROCKS_VERSION}.tar.gz"
-    curl -R -O "https://luarocks.github.io/luarocks/releases/${LR_TAR}"
-    tar -xzf "$LR_TAR"
-    cd "luarocks-${LUAROCKS_VERSION}" || exit
-    ./configure --with-lua-include=/usr/local/include
-    make
-    sudo make install
-    cd ..
+    curl -fR -O "https://luarocks.github.io/luarocks/releases/${LR_TAR}" || return 1
+    tar -xzf "$LR_TAR" || { rm -f "$LR_TAR"; return 1; }
+    # build in a subshell: a failure can't leak a cwd change into the sourcing installer shell
+    if ! (cd "luarocks-${LUAROCKS_VERSION}" && ./configure --with-lua-include=/usr/local/include && make && sudo make install); then
+        rm -rf "luarocks-${LUAROCKS_VERSION}" "$LR_TAR"
+        return 1
+    fi
     rm -rf "luarocks-${LUAROCKS_VERSION}" "$LR_TAR"
 }
 
 # === Main ===
-install_dependencies
-install_lua
-install_luarocks
+if ! install_dependencies; then
+    echo "Failed to install system packages; skipping Lua/LuaRocks build."
+    return 1 2>/dev/null || exit 1
+fi
+if ! install_lua; then
+    echo "Lua installation failed."
+    return 1 2>/dev/null || exit 1
+fi
+if ! install_luarocks; then
+    echo "LuaRocks installation failed."
+    return 1 2>/dev/null || exit 1
+fi
 
 echo "Installation completed."

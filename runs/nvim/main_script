@@ -1,8 +1,30 @@
 #!/usr/bin/env bash
 
-curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+# map machine architecture to Neovim release naming
+case "$(uname -m)" in
+    x86_64)        NVIM_ARCH=x86_64 ;;
+    aarch64|arm64) NVIM_ARCH=arm64 ;;
+    *) echo "Unsupported architecture for Neovim tarball: $(uname -m). Skipping."; return 0 2>/dev/null || exit 0 ;;
+esac
 
-rm nvim-linux-x86_64.tar.gz
+NVIM_TAR="nvim-linux-${NVIM_ARCH}.tar.gz"
+# -f: fail on HTTP errors so we never wipe an existing install over a bad download
+if ! curl -fLO "https://github.com/neovim/neovim/releases/download/v0.11.7/${NVIM_TAR}"; then
+    echo "Download failed: ${NVIM_TAR}. Keeping existing Neovim install."
+    return 1 2>/dev/null || exit 1
+fi
+
+# extract to a temp dir first so a failed extraction can't corrupt the existing install
+NVIM_TMP=$(mktemp -d)
+if ! tar -C "$NVIM_TMP" -xzf "$NVIM_TAR"; then
+    echo "Extraction failed: ${NVIM_TAR}. Keeping existing Neovim install."
+    rm -rf "$NVIM_TMP" "$NVIM_TAR"
+    return 1 2>/dev/null || exit 1
+fi
+sudo rm -rf "/opt/nvim-linux-${NVIM_ARCH}" /opt/nvim
+sudo mv "$NVIM_TMP/nvim-linux-${NVIM_ARCH}" /opt/
+# stable arch-independent path for PATH entries (see stows/zsh/.zsh_paths)
+sudo ln -sfn "/opt/nvim-linux-${NVIM_ARCH}" /opt/nvim
+export PATH="$PATH:/opt/nvim/bin"
+
+rm -rf "$NVIM_TMP" "$NVIM_TAR"
