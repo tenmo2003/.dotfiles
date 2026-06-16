@@ -63,7 +63,7 @@ newprj() {
         project_type="$2"
     fi
 
-    if [[ "$1" =~ ^https?:// ]]; then
+    if [[ "$1" =~ ^(https?://|git@|ssh://) ]]; then
         pushd ~/projects/"$project_type"
         git clone "$1"
         popd
