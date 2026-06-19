@@ -2,3 +2,6 @@
 	path = stows/nvim/.config/nvim
 	url = https://github.com/tenmo2003/init.lua.git
     branch = master
+[submodule "stows/alacritty/.config/alacritty/themes"]
+	path = stows/alacritty/.config/alacritty/themes
+	url = https://github.com/alacritty/alacritty-theme
