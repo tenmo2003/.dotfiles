@@ -254,7 +254,7 @@ find_dirs() {
             maxdepth="${TS_MAX_DEPTH:-1}"
         fi
 
-        [[ -d "$path" ]] && find "$path" -mindepth "$mindepth" -maxdepth "$maxdepth" -path '*/.git' -prune -o -type d -print
+        [[ -d "$path" ]] && find -H "$path" -mindepth "$mindepth" -maxdepth "$maxdepth" -path '*/.git' -prune -o -type d -print
 
     done
 }
