@@ -4,10 +4,8 @@ tag=$1
 
 remote_url=$(git remote get-url origin)
 
-regex="(?:https?|ssh):\/\/.*?\/(.*)(?:\.git)?"
-
 if [[ $remote_url =~ ^(https?|ssh)://[^/]*/(.*)(\.git)?$ ]]; then
-    location=${BASH_REMATCH[2]}
+    location=${BASH_REMATCH[2]%.git}
 
     full_location="registry.falcongames.com/$location:$tag"
     echo "Building $full_location"
