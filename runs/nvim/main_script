@@ -7,9 +7,10 @@ case "$(uname -m)" in
     *) echo "Unsupported architecture for Neovim tarball: $(uname -m). Skipping."; return 0 2>/dev/null || exit 0 ;;
 esac
 
+NVIM_VERSION="v0.12.5"
 NVIM_TAR="nvim-linux-${NVIM_ARCH}.tar.gz"
 # -f: fail on HTTP errors so we never wipe an existing install over a bad download
-if ! curl -fLO "https://github.com/neovim/neovim/releases/download/v0.11.7/${NVIM_TAR}"; then
+if ! curl -fLO "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/${NVIM_TAR}"; then
     echo "Download failed: ${NVIM_TAR}. Keeping existing Neovim install."
     return 1 2>/dev/null || exit 1
 fi
