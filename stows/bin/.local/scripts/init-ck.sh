@@ -2,7 +2,7 @@
 
 pwd=$(pwd)
 
-cp -r ~/claudekit-engineer/.claude $pwd/
+cp -rT ~/claudekit-engineer/claude "$pwd/.claude"
 cp -r ~/claudekit-engineer/docs/ $pwd/
 cp -r ~/claudekit-engineer/plans $pwd/
 cp ~/claudekit-engineer/CLAUDE.md $pwd/
