@@ -13,6 +13,10 @@ url=$(git remote get-url origin)
 #     url=$(echo $url | sed 's/git@gitlab.com:/https:\/\/gitlab.com\//')
 # fi
 
-url=$(echo $url | sed 's/git@\([^:]*\):/https:\/\/\1\//')
+# ssh://[user@]host[:port]/path and [user@]host:path -> https://host/path
+url=$(echo "$url" | sed -E \
+    -e 's#^(git\+)?ssh://([^@/]+@)?([^:/]+)(:[0-9]+)?/#https://\3/#' \
+    -e 's#^[^@/:]+@([^:/]+):#https://\1/#' \
+    -e 's#\.git$##')
 
 sensible-browser $url || echo "No remote repository"
