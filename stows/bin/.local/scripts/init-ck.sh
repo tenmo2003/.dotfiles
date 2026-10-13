@@ -14,5 +14,6 @@ if [[ -f "$PWD/.gitignore" ]] && ! grep -q '.claude' "$PWD/.gitignore"; then
 docs/
 plans/
 CLAUDE.md
+CLAUDE.local.md
 EOF
 fi
