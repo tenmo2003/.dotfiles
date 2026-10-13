@@ -7,13 +7,21 @@ cp -r ~/claudekit-engineer/docs/ $pwd/
 cp -r ~/claudekit-engineer/plans $pwd/
 cp ~/claudekit-engineer/CLAUDE.md $pwd/
 
-if [[ -f "$PWD/.gitignore" ]] && ! grep -q '.claude' "$PWD/.gitignore"; then
-    cat <<EOF >> $pwd/.gitignore
-# ClaudeKit
-.claude/
-docs/
-plans/
-CLAUDE.md
-CLAUDE.local.md
-EOF
+gitignore="$pwd/.gitignore"
+ignore_items=(
+    "# ClaudeKit"
+    ".claude/"
+    "docs/"
+    "plans/"
+    "CLAUDE.md"
+    "CLAUDE.local.md"
+)
+
+if [[ -f "$gitignore" ]]; then
+    # make sure appended lines don't get glued to an unterminated last line
+    [[ -s "$gitignore" && -n "$(tail -c1 "$gitignore")" ]] && echo >> "$gitignore"
+
+    for item in "${ignore_items[@]}"; do
+        grep -qxF -- "$item" "$gitignore" || echo "$item" >> "$gitignore"
+    done
 fi
