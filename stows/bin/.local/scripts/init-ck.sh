@@ -10,16 +10,25 @@ if [[ "$pwd" == "$kit" ]]; then
 fi
 
 # runtime data and archives from the kit's own sessions don't belong in a new project
-rsync -a \
-    --exclude 'session-state/' \
-    --exclude 'command-archive/' \
-    --exclude 'hooks/.logs/' \
-    --exclude '.env' \
-    "$kit/claude/" "$pwd/.claude/"
+excludes=(session-state command-archive hooks/.logs .env)
+
+if command -v rsync >/dev/null; then
+    rsync -a \
+        --exclude 'session-state/' \
+        --exclude 'command-archive/' \
+        --exclude 'hooks/.logs/' \
+        --exclude '.env' \
+        "$kit/claude/" "$pwd/.claude/"
+else
+    echo "init-ck: rsync not found, falling back to tar" >&2
+    mkdir -p "$pwd/.claude"
+    tar -C "$kit/claude" "${excludes[@]/#/--exclude=./}" -cf - . | tar -C "$pwd/.claude" -xf -
+fi
 
 # the kit's docs/plans describe the kit; the project only needs empty dirs + plan templates
-mkdir -p "$pwd/docs" "$pwd/plans/reports"
-rsync -a --ignore-existing "$kit/plans/templates/" "$pwd/plans/templates/"
+mkdir -p "$pwd/docs" "$pwd/plans/reports" "$pwd/plans/templates"
+
+cp -Rn "$kit/plans/templates/." "$pwd/plans/templates/"
 
 [[ -f "$pwd/CLAUDE.md" ]] || cp "$kit/CLAUDE.md" "$pwd/"
 
